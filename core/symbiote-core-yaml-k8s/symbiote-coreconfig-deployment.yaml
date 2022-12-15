@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-core.yml
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: symbiote-coreconfig
+  name: symbiote-coreconfig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-coreconfig
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-swarm-core.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/symbiote: "true"
+        io.kompose.service: symbiote-coreconfig
+    spec:
+      containers:
+        - env:
+            - name: no_proxy
+              value: localhost,127.0.0.0,127.0.1.1,10.*.*.*,iotfeds-symbiotecore.intracom-telecom.com
+          image: symbioteh2020/symbiote-coreconfig:3.0.5
+          name: symbiote-coreconfig
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              memory: "700M"
+            requests:
+              memory: "350M"
+          volumeMounts:
+            - mountPath: /home/CoreConfigProperties
+              name: symbiote-vol-config
+      restartPolicy: Always
+      volumes:
+        - name: symbiote-vol-config
+          persistentVolumeClaim:
+            claimName: symbiote-vol-config
+status: {}

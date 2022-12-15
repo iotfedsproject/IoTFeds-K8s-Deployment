@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-core.yml
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: symbiote-coreinterface
+  name: symbiote-coreinterface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-coreinterface
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-swarm-core.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/symbiote: "true"
+        io.kompose.service: symbiote-coreinterface
+    spec:
+      containers:
+        - env:
+            - name: no_proxy
+              value: localhost,127.0.0.0,127.0.1.1,10.*.*.*,iotfeds-symbiotecore.intracom-telecom.com
+          image: symbioteh2020/symbiote-coreinterface:3.0.3
+          name: symbiote-coreinterface
+          ports:
+            - containerPort: 8100
+          resources:
+            limits:
+              memory: "1024M"
+            requests:
+              memory: "512M"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: coreinterface-configmap-volume
+              subPath: bootstrap.properties
+      restartPolicy: Always
+      volumes:
+        - name: coreinterface-configmap-volume
+          configMap:
+              name: coreinterface-configmap
+status: {}

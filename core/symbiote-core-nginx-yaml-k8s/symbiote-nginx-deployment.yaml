@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-prod-swarm-core.yml
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: symbiote-nginx
+  name: symbiote-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-nginx
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-prod-swarm-core.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/symbiote: "true"
+        io.kompose.service: symbiote-nginx
+    spec:
+      containers:
+        - env:
+            - name: SYMBIOTE_ENV
+              value: prod
+            - name: TZ
+              value: Europe/Athens
+          image: symbioteh2020/symbiote-nginx
+          name: symbiote-nginx
+          ports:
+            - containerPort: 443
+          resources: {}
+          volumeMounts:
+            - mountPath: /home
+              name: nginxngrok
+            - mountPath: /home
+              name: nginxprod
+            - mountPath: /certificates
+              name: nginxfullchaincert
+            - mountPath: /certificates
+              name: nginxprivkeycert
+            - mountPath: /certificates
+              name: nginxglobalpass
+      restartPolicy: Always
+      volumes:
+        - name: nginxngrok
+          secret:
+            items:
+              - key: nginxngrok
+                path: nginx-ngrok.conf
+            secretName: nginxngrok
+        - name: nginxprod
+          secret:
+            items:
+              - key: nginxprod
+                path: nginx-prod.conf
+            secretName: nginxprod
+        - name: nginxfullchaincert
+          secret:
+            items:
+              - key: nginxfullchaincert
+                path: fullchain.pem
+            secretName: nginxfullchaincert
+        - name: nginxprivkeycert
+          secret:
+            items:
+              - key: nginxprivkeycert
+                path: privkey.pem
+            secretName: nginxprivkeycert
+        - name: nginxglobalpass
+          secret:
+            items:
+              - key: nginxglobalpass
+                path: global.pass
+            secretName: nginxglobalpass
+status: {}

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ name: symbiote-api-ingress
+ namespace: symbiote-core
+ annotations:
+   kubernetes.io/ingress.class: nginx
+#   nginx.ingress.kubernetes.io/whitelist-source-range: "146.124.141.59/32, 146.124.141.60/32"
+#   ingress.kubernetes.io/secure-backends: "false"
+spec:
+ tls:
+ - hosts:
+   # fully-qualified domain name of the BAI admin REST service
+   - symbiote-core.iotfeds.intracom-telecom.com
+   secretName: wildcard-ingress-tls
+ rules:
+ - host: symbiote-core.iotfeds.intracom-telecom.com
+   http:
+     paths:
+     - path: /symbioteapi
+       pathType: Prefix
+       backend:
+         service:
+           name: symbiote-api
+           port:
+             number: 8080

@@ -1,0 +1,1 @@
+for FOLDERS in $(ls); do for FILES in $(ls $FOLDERS) ; do kubectl create configmap ${FOLDERS,,}-$(echo $FILES | cut -d "." -f 1) --from-file=./$FOLDERS/$FILES -o yaml --dry-run=client > ./$FOLDERS/${FOLDERS,,}-$(echo $FILES | cut -d "." -f 1).yml ; done; done

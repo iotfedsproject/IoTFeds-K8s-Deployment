@@ -1,0 +1,33 @@
+apiVersion: v1
+data:
+  cert.properties: |
+    # From CloudConfigProperties application.properties file: symbIoTe.core.interface.url
+    coreAAMAddress=https://safety4rail-symbiotecore.intracom-telecom.com/coreInterface
+
+    # The user registered through administration in the symbIoTe Core
+    serviceOwnerUsername=icom1
+    serviceOwnerPassword=icom
+
+    # The platform ID registered to the given platform Owner
+    serviceId=safety4rail-platform
+
+    # Generated keystore file name
+    keyStoreFileName=paam-keystore-safety4rail-platform.p12
+
+    # used to access the keystore. MUST NOT be longer than 7 chars
+    # from spring bootstrap file: aam.security.KEY_STORE_PASSWORD
+    # Further more as the Java security package is working totally against the API - ignores the privateKeyPassword.
+    # IT MUST BE THE SAME as spring bootstrap file: aam.security.PV_KEY_PASSWORD
+    keyStorePassword=pass
+
+    # platform AAM key/certificate alias... case INSENSITIVE (all lowercase)
+    # from spring bootstrap file: aam.security.CERTIFICATE_ALIAS
+    aamCertificateAlias=paam
+
+    # root CA certificate alias... case INSENSITIVE (all lowercase)
+    # from spring bootstrap file:  aam.security.ROOT_CA_CERTIFICATE_ALIAS
+    rootCACertificateAlias=caam
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: authenticationauthorizationmanager-cert-configmap

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-core.yml
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: symbiote-eureka
+  name: symbiote-eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-eureka
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-swarm-core.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/symbiote: "true"
+        io.kompose.service: symbiote-eureka
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/Athens
+            - name: _JAVA_OPTIONS
+              value: '-Xms128m -Xmx512m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Dhttp.sslVerify=false -XX:+UseContainerSupport'
+            - name: JAVA_OPTIONS
+              value: '-XX:+UseContainerSupport'
+          image: symbioteh2020/symbiote-eureka:3.0.2
+          name: symbiote-eureka
+          ports:
+            - containerPort: 8761
+          resources:
+            limits:
+              memory: "400M"
+            requests:
+              memory: "200M"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+      restartPolicy: Always
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap
+status: {}

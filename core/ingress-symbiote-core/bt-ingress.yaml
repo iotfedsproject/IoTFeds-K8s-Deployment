@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: btm-ingress
+  namespace: symbiote-core
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - symbiote-core.iotfeds.intracom-telecom.com
+      secretName: wildcard-ingress-tls
+  rules:
+    - host: symbiote-core.iotfeds.intracom-telecom.com
+      http:
+        paths:
+          - path: /btm
+            pathType: Prefix
+            backend:
+              service:
+                name: symbiote-bt
+                port:
+                  number: 8205

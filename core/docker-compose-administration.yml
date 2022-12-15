@@ -1,0 +1,36 @@
+version: "3.5"
+
+x-environment:
+  &default-environment
+  #### Uncomment and configure the following if you are behind a proxy
+    - JAVA_HTTP_PROXY=-Dhttp.proxyHost=146.124.225.18 -Dhttp.proxyPort=3128
+    - JAVA_HTTPS_PROXY=-Dhttps.proxyHost=146.124.225.18 -Dhttps.proxyPort=3128 
+    - JAVA_SOCKS_PROXY=-DsocksProxyHost=146.124.225.18 -DsocksProxyPort=3128
+    - JAVA_NON_PROXY_HOSTS=-Dhttp.nonProxyHosts=*symbiote-h2020.eu|*intracom-telecom.com|symbiote-coreconfig|symbiote-aam|symbiote-eureka|symbiote-mongo|localhost|10.*.*.*
+   # _JAVA_OPTIONS=-Dhttps.proxyHost=146.124.225.18 -Dhttps.proxyPort=3128 -Dhttp.proxyHost=146.124.225.18 -Dhttp.proxyPort=3128 $JAVA_NON_PROXY_HOSTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Dhttp.sslVerify=false
+    - _JAVA_OPTIONS= -Dhttps.proxyHost=146.124.225.18 -Dhttps.proxyPort=3128  $JAVA_NON_PROXY_HOSTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -Dhttp.sslVerify=false
+    - TZ=Europe/Athens   
+
+#- _JAVA_OPTIONS=$JAVA_HTTP_PROXY
+    - http_proxy=http://146.124.225.18:3128
+    - https_proxy=http://146.124.225.18:3128
+    - no_proxy=localhost,127.0.0.0,127.0.1.1,10.*.*.*,iotfeds-symbiotecore.intracom-telecom.com
+
+services:
+  symbiote-admin:
+    environment: *default-environment
+#    image: symbioteh2020/symbiote-admin:3.1.6
+    image: administration-3.1.6:latest
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    networks:
+      - symbiote
+    secrets:
+      - source: adminconfig
+        target: /home/bootstrap.properties
+
+secrets:
+  adminconfig:
+    file: ./bootstrap.properties

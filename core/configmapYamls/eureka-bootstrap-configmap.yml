@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  bootstrap.properties: spring.cloud.config.uri=http://symbiote-cloudconfig:8888
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: eureka-bootstrap-configmap

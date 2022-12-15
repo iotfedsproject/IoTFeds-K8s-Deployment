@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  application.properties: |-
+    logging.level.eu.h2020.symbiote=INFO
+
+    rabbit.host=symbiote-rabbitmq
+    rabbit.username=guest
+    rabbit.password=guest
+
+    rap-plugin.filtersSupported=false
+    rap-plugin.notificationsSupported=false
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: rappluginstarter-application-configmap
