@@ -1,0 +1,28 @@
+apiVersion: v1
+data:
+  application.properties: |
+    logging.level.eu.h2020.symbiote=DEBUG
+
+    rabbit.host=symbiote-rabbitmq
+    rabbit.username=guest
+    rabbit.password=guest
+
+    rap-plugin.filtersSupported=false
+    rap-plugin.notificationsSupported=true
+
+    spring.application.name=RapPluginExample
+    #RapPluginThingSpeak
+
+    #ThingSpeak definitions
+    thingspeak.user.api.key = NHS3VQAIO842UFW7
+    thingspeak.mqtt.api.key = 38VMMGUNCYQ99UJ1
+    thinkspeak.channel.read.weatherstation = 961360
+    thinkspeak.channel.read.airqualitystation = 895045
+
+    thingspeak.baseurl = https://api.thingspeak.com/channels/
+
+    talkback.api_key= HI58PWP4TE68GM7U
+    talkback.id = 42401
+kind: ConfigMap
+metadata:
+  name: rappluginstarter-application-configmap

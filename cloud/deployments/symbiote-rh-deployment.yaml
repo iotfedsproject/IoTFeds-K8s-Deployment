@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: symbiote-rh
+  name: symbiote-rh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-rh
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/symbioteL2: "true"
+        io.kompose.service: symbiote-rh
+    spec:
+      containers:
+        - env:
+            - name: holder
+              value: '  '
+          image: symbioteh2020/symbiote-rh:3.0.8
+          name: symbiote-rh
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8080 -jar $(ls *run.jar)"]
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "1"
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8001
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: registrationhandler-bootstrap-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: registrationhandler-bootstrap-configmap-volume
+          configMap:
+            name: registrationhandler-bootstrap-configmap

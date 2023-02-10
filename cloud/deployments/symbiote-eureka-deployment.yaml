@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: symbiote-eureka
+  name: symbiote-eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-eureka
+  template:
+    metadata:
+      labels:
+        io.kompose.network/symbioteL2: "true"
+        io.kompose.service: symbiote-eureka
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-eureka:3.0.2
+          name: symbiote-eureka
+          resources:
+            limits:
+              memory: "1024M"
+            requests:
+              memory: "500M"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: eureka-bootstrap-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: eureka-bootstrap-configmap-volume
+          configMap:
+            name: eureka-bootstrap-configmap

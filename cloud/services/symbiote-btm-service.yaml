@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: symbiote-bt
+  name: symbiote-bt
+spec:
+  ports:
+    - name: "8205"
+      port: 8205
+      targetPort: 8205
+  selector:
+    io.kompose.service: symbiote-bt

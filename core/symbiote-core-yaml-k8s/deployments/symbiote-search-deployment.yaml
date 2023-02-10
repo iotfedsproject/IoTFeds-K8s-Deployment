@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-search
+  name: symbiote-search
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-search
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-search
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-search:3.0.13
+          name: symbiote-search
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-coreinterface:8100 -Duser.home=/home -jar $(ls *.jar)"]
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "1"
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+            - mountPath: /home/coreSearchTriplestore
+              name: symbiote-search-triplestore
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap
+        - name: symbiote-search-triplestore
+          persistentVolumeClaim:
+            claimName: symbiote-search-triplestore

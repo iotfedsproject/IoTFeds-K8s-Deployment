@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bootstrap-properties-configmap
+data:
+  bootstrap.properties: 
+  |-
+  #################################################################
+  ## TODO: Below are the configurations need to be setup by the user
+  #################################################################
+
+  # The credentials of the Platform Owner account in the PAAM
+  symbIoTe.component.username=icom
+  #was admin
+  #was mxar
+  symbIoTe.component.password=icom
+  #was password
+  #marios123
+
+  # Keystore configuration
+  symbIoTe.component.keystore.path=keystore.jks
+  #was core.p12 mxar
+  #was keystore.jks.p12
+  symbIoTe.component.keystore.password=icom
+
+  #################################################################
+  ## END OF TODO
+  #################################################################
+
+  spring.cloud.config.uri=http://symbiote-coreconfig:8888
+  logging.level.eu.h2020.symbiote=DEBUG
+
+  server.ssl.enabled=false
+
+  aam.deployment.owner.username=${symbIoTe.component.username}
+  aam.deployment.owner.password=${symbIoTe.component.password}
+  aam.environment.keystoreName=${symbIoTe.component.keystore.path}
+  aam.environment.keystorePass=${symbIoTe.component.keystore.password}
+
+  adm.deployment.owner.username=${symbIoTe.component.username}
+  adm.deployment.owner.password=${symbIoTe.component.password}
+  adm.security.KEY_STORE_FILE_NAME=${symbIoTe.component.keystore.path}
+  adm.security.KEY_STORE_PASSWORD=${symbIoTe.component.keystore.password}
+
+  #mxar added
+  spring.profiles.active=core

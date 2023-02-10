@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coreinterface-configmap
+data:
+  bootstrap.properties: 
+  |-
+    spring.cloud.config.uri=http://symbiote-coreconfig:8888
+    logging.level.eu.h2020.symbiote=INFO
+
+    server.ssl.enabled=false
+
+    symbiote.aamUrl=http://symbiote-aam:8443
+    symbiote.admUrl=http://symbiote-admin:8250
+    symbiote.btmUrl=http://symbiote-bt:8205

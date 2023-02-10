@@ -4,7 +4,7 @@ data:
     # REQUIRED SETTINGS:
     spring.profiles.active=platform
     spring.application.name=AuthenticationAuthorizationManager
-    spring.cloud.config.uri=http://symbiote-coreconfig:8888
+    spring.cloud.config.uri=http://symbiote-cloudconfig:8888
     logging.file=logs/AuthenticationAuthorizationManager.log
     logging.level.eu.h2020.symbiote=INFO
 
@@ -18,7 +18,8 @@ data:
     aam.deployment.owner.password=icom
 
     # name of the PAAM JavaKeyStore file you need to put in your src/main/resources directory
-    aam.security.KEY_STORE_FILE_NAME=file:///#{systemProperties['user.dir']}/paam-keystore-safety4rail-platform.p12
+    #aam.security.KEY_STORE_FILE_NAME=file:///#{systemProperties['user.dir']}/paam-keystore-l2-icom-platform.p12
+    aam.security.KEY_STORE_FILE_NAME=file:///#{systemProperties['user.dir']}/paam-keystore-icom-platform.p12
 
     # name of the root ca certificate entry in the generated Symbiote Keystore
     aam.security.ROOT_CA_CERTIFICATE_ALIAS=caam

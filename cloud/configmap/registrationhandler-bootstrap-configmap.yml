@@ -1,9 +1,9 @@
 apiVersion: v1
 data:
-  bootstrap.properties: |
+  bootstrap.properties: |-
     spring.cloud.config.uri=http://symbiote-cloudconfig:8888
 
-    logging.level.eu.h2020.symbiote=INFO
+    logging.level.eu.h2020.symbiote=DEBUG
 
     # The credentials of the Platform Owner account in the PAAM
     symbIoTe.component.username=icom
@@ -14,4 +14,4 @@ data:
     symbIoTe.component.keystore.password=pass
 kind: ConfigMap
 metadata:
-  name: subscriptionmanager-bootstrap-configmap
+  name: registrationhandler-bootstrap-configmap

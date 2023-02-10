@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-cloudcoreinterface
+  name: symbiote-cloudcoreinterface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-cloudcoreinterface
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-cloudcoreinterface
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-cloudcoreinterface:3.0.3
+          name: symbiote-cloudcoreinterface
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8443 -Duser.home=/home -Dspring.output.ansi.enabled=NEVER -jar $(ls *.jar)"]
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "1"
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+          ports:
+            - containerPort: 8101
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap

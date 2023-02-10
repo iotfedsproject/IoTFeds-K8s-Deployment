@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-bt
+  name: symbiote-bt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-bt
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-bt
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-bt:3.0.5
+          name: symbiote-bt
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8080 -jar $(ls *run.jar)"]
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "1"
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+          ports:
+           - containerPort: 8205
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap

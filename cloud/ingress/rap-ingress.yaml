@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rap-ingress
+  namespace: symbiote-cloud
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  tls:
+    - hosts:
+        - symbiote-cloud.iotfeds.intracom-telecom.com
+      secretName: wildcard-ingress-tls
+  rules:
+    - host: symbiote-cloud.iotfeds.intracom-telecom.com
+      http:
+        paths:
+          - path: /rap(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: symbiote-rap
+                port:
+                  number: 8103

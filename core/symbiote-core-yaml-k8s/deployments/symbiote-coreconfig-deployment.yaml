@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-coreconfig
+  name: symbiote-coreconfig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-coreconfig
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-coreconfig
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-coreconfig:3.0.5
+          name: symbiote-coreconfig
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8080 -Duser.home=/home -jar $(ls *.jar)"]
+          resources:
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
+            requests:
+              memory: "500Mi"
+              cpu: "100m"
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - mountPath: /home/CoreConfigProperties
+              name: symbiote-vol-config
+      volumes:
+        - name: symbiote-vol-config
+          persistentVolumeClaim:
+            claimName: symbiote-vol-config

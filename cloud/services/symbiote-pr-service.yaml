@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: symbiote-pr
+  name: symbiote-pr
+spec:
+  ports:
+    - name: "8203"
+      port: 8203
+      targetPort: 8203
+  selector:
+    io.kompose.service: symbiote-pr

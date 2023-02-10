@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: symbiote-cloudconfig
+  name: symbiote-cloudconfig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-cloudconfig
+  template:
+    metadata:
+      labels:
+        io.kompose.network/symbioteL2: "true"
+        io.kompose.service: symbiote-cloudconfig
+    spec:
+      containers:
+        - env:
+            - name: holder
+              value: ' '
+          image: symbioteh2020/symbiote-cloudconfig:3.0.4
+          name: symbiote-cloudconfig
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              memory: "1024M"
+            requests:
+              memory: "500M"
+          volumeMounts:
+            - mountPath: /home/CloudConfigProperties
+              name: symbiote-vol-config
+      restartPolicy: Always
+      volumes:
+        - name: symbiote-vol-config
+          persistentVolumeClaim:
+            claimName: symbiote-vol-config

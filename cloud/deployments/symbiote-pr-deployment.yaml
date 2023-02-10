@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: symbiote-pr
+  name: symbiote-pr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: symbiote-pr
+  template:
+    metadata:
+      labels:
+        io.kompose.network/symbioteL2: "true"
+        io.kompose.service: symbiote-pr
+    spec:
+      containers:
+        - env:
+            - name: holder
+              value: '  '
+          image: iotfedsproject/platform-registry:0.1.0
+          name: symbiote-pr
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8080 -jar $(ls *run.jar)"]
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "1"
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: platformregistry-bootstrap-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: platformregistry-bootstrap-configmap-volume
+          configMap:
+            name: platformregistry-bootstrap-configmap

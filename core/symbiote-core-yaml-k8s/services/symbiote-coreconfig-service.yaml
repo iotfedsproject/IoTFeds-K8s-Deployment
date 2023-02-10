@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-coreconfig
+  name: symbiote-coreconfig
+spec:
+  ports:
+    - name: "8888"
+      port: 8888
+      targetPort: 8888
+  selector:
+    icom.symbiote.service: symbiote-coreconfig

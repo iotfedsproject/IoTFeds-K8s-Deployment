@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: symbiote-fm
+  name: symbiote-fm
+spec:
+  ports:
+    - name: "8202"
+      port: 8202
+      targetPort: 8202
+  selector:
+    io.kompose.service: symbiote-fm
