@@ -1,0 +1,17 @@
+server:
+  enabled: true
+
+image:
+  repository: symbioteh2020/symbiote-coreconfig
+  tag: "3.0.5"
+  pullPolicy: IfNotPresent
+
+
+# resources: {}
+resources:
+  limits:
+    memory: "500Mi"
+    cpu: "500m"
+  requests:
+    memory: "500Mi"
+    cpu: "500m"

@@ -1,0 +1,29 @@
+server:
+  enabled: true
+
+image:
+  repository: iotfedsproject/symbiote-api
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+
+# resources: {}
+resources:
+  limits:
+    memory: "512Mi"
+    cpu: "1"
+  requests:
+    memory: "256Mi"
+    cpu: "500m"
+
+ingress:
+  enabled: true
+
+  ingressClassName: nginx
+
+  host: core-test.iotfeds.intracom-telecom.com
+
+  path: /symbioteapi
+
+  tls: 
+    secretName: wildcard-ingress-tls

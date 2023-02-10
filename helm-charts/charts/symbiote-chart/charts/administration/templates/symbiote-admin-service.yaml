@@ -1,0 +1,15 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-admin
+  name: symbiote-admin
+spec:
+  ports:
+    - name: "8250"
+      port: 8250
+      targetPort: 8250
+  selector:
+    icom.symbiote.service: symbiote-admin
+{{- end }}
