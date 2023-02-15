@@ -1,9 +1,0 @@
-apiVersion: v2
-name: rabbitmq
-description: A Helm chart to install on Kubernetes Symbiote-core and symbiote-cloud.
-type: application
-version: 0.1.0
-appVersion: "1.0.0"
-maintainers:
-- email: anasiou@intracom-telecom.com
-  name: anasiou
