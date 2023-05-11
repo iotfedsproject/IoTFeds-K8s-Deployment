@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+ - aam-ingress.yaml
+ - btm-ingress.yaml
+ - fm-ingress.yaml
+ - paam-ingress.yaml
+ - pr-ingress.yaml
+ - rap-ingress.yaml
+ - rh-ingress.yaml
+ - sm-ingress.yaml

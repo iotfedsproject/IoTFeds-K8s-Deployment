@@ -1,0 +1,15 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    io.kompose.service: symbiote-vol-config
+  name: symbiote-vol-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+{{- end }}

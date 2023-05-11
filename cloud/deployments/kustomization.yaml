@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - symbiote-pr-deployment.yaml
+  - symbiote-sm-deployment.yaml
+  - symbiote-aam-deployment.yaml          
+  - symbiote-fm-deployment.yaml
+  - symbiote-rabbitmq-deployment.yaml
+  - symbiote-tm-deployment.yaml
+  - symbiote-bt-deployment.yaml           
+  - symbiote-mongo-deployment.yaml       
+  - symbiote-rap-deployment.yaml
+  - symbiote-cloudconfig-deployment.yaml  
+  - symbiote-monitoring-deployment.yaml  
+  - symbiote-rh-deployment.yaml

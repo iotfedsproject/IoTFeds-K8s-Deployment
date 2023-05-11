@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  application.yaml: |
+    spring:
+      application:
+        name: iotfeds-symbiote-api
+      mvc:
+        pathmatch:
+          matching-strategy: ant_path_matcher
+
+    logging:
+      level:
+        ROOT: DEBUG
+    configuration:
+      keystorePath: testKeystore.jks
+      keystorePassword: testKeystore
+      coreAAMAddress: https://symbiote-core.iotfeds.intracom-telecom.com/
+
+    springfox:
+      documentation:
+        swagger-ui:
+          base-url: /symbioteapi
+        openApi:
+          v3:
+            path: /symbioteapi/v3/api-docs
+        swagger:
+          v2:
+            path: /symbioteapi/v2/api-docs
+kind: ConfigMap
+metadata:
+  name: symbiote-api-configmap

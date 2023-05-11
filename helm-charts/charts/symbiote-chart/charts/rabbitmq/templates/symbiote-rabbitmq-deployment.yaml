@@ -1,0 +1,28 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-rabbitmq
+  name: {{ .Release.Name }}-symbiote-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-rabbitmq
+  template:
+    metadata:
+      labels:
+        icom.symbiote.network/symbiote: "true"
+        icom.symbiote.service: symbiote-rabbitmq
+    spec:
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: symbiote-rabbitmq
+          ports:
+            - containerPort: 5671
+            - containerPort: 5672
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+{{- end -}}

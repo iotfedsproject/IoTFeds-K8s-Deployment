@@ -1,0 +1,43 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-aam
+  name: {{ .Release.Name }}-symbiote-aam
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-aam
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-aam
+    spec:
+      containers:
+        - name: symbiote-aam
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -jar $(ls *run.jar)"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: authenticationauthorizationmanager-bootstrap-configmap-volume
+              subPath: bootstrap.properties
+            - mountPath: /home/core.p12
+              name: aamkeystore
+              subPath: core.p12
+      volumes:
+        - name: authenticationauthorizationmanager-bootstrap-configmap-volume
+          configMap:
+            name: authenticationauthorizationmanager-bootstrap-configmap
+        - name: aamkeystore
+          secret:
+            items:
+              - key: aamkeystore
+                path: core.p12
+            secretName: aamkeystore
+{{- end }}

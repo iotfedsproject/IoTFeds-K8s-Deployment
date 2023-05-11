@@ -1,0 +1,34 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-api
+  name: {{ .Release.Name }}-symbiote-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-api
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-api
+    spec:
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: symbiote-api
+          command: ["/bin/sh","-c"]
+          args: ["java -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-coreinterface:8100 -Duser.home=/home -Dspring.output.ansi.enabled=NEVER -Xmx128m -XX:+UseContainerSupport -jar $(ls *.jar)"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /home/application.yaml
+              name: symbiote-api-configmap-volume
+              subPath: application.yaml
+      volumes:
+        - name: symbiote-api-configmap-volume
+          configMap:
+              name: symbiote-api-configmap
+{{- end }}

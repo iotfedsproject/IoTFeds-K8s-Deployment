@@ -1,0 +1,34 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-cram
+  name: {{ .Release.Name }}-symbiote-cram
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-cram
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-cram
+    spec:
+      containers:          
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: symbiote-cram
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-coreinterface:8100 -Duser.home=/home -jar $(ls *.jar)"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap
+{{- end -}}

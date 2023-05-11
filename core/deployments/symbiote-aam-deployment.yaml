@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-aam
+  name: symbiote-aam
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-aam
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-aam
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-aam:5.0.12
+          name: symbiote-aam
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -jar $(ls *run.jar)"]
+          resources:
+            limits:
+              memory: "750Mi"
+              cpu: "500m"
+            requests:
+              memory: "500Mi"
+              cpu: "300m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: authenticationauthorizationmanager-bootstrap-configmap-volume
+              subPath: bootstrap.properties
+            - mountPath: /home/core.p12
+              name: aamkeystore
+              subPath: core.p12
+      volumes:
+        - name: authenticationauthorizationmanager-bootstrap-configmap-volume
+          configMap:
+            name: authenticationauthorizationmanager-bootstrap-configmap
+        - name: aamkeystore
+          secret:
+            items:
+              - key: aamkeystore
+                path: core.p12
+            secretName: aamkeystore

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-admin
+  name: symbiote-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-admin
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-admin
+    spec:
+      containers:
+        - env:
+            - name: placeholder
+              value: placeholder
+          image: iotfedsproject/administration:1.0.11
+          name: symbiote-admin
+          command: ["/bin/sh","-c"]
+          args: ["java -Xmx1024m -Duser.home=/home -Dspring.output.ansi.enabled=NEVER -jar $(ls *.jar)"]
+          ports:
+          - containerPort: 8250
+          resources:
+            limits:
+              memory: "700M"
+              cpu: "500m"
+            requests:
+              memory: "300M"
+              cpu: "300m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap

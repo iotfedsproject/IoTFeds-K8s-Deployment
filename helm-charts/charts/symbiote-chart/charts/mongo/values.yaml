@@ -1,0 +1,16 @@
+server:
+  enabled: true
+
+image:
+  repository: mongo
+  tag: "3.6"
+  pullPolicy: IfNotPresent
+
+# resources: {}
+resources:
+  limits:
+    memory: "300Mi"
+    cpu: "500m"
+  requests:
+    memory: "200Mi"
+    cpu: "100m"

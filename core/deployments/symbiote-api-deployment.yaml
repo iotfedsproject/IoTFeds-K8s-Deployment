@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-api
+  name: symbiote-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-api
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-api
+    spec:
+      containers:
+        - image: iotfedsproject/symbiote-api:0.1.0
+          name: symbiote-api
+          command: ["/bin/sh","-c"]
+          args: ["java -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-coreinterface:8100 -Duser.home=/home -Dspring.output.ansi.enabled=NEVER -Xmx128m -XX:+UseContainerSupport -jar $(ls *.jar)"]
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+          volumeMounts:
+            - mountPath: /home/application.yaml
+              name: symbiote-api-configmap-volume
+              subPath: application.yaml
+      volumes:
+        - name: symbiote-api-configmap-volume
+          configMap:
+              name: symbiote-api-configmap

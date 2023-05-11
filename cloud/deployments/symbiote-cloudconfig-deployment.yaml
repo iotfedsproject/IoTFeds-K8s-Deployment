@@ -15,24 +15,56 @@ spec:
         io.kompose.network/symbioteL2: "true"
         io.kompose.service: symbiote-cloudconfig
     spec:
+      initContainers:
+        - name: init-myservice
+          image: alpine/git:2.36.3
+          command:
+            - sh
+            - -c
+            - |
+              cp /configmap/files/*  /tmp/configs/
+              cd /tmp/configs/
+              git init .
+              git config user.email "admin@iotfeds.eu"
+              git config user.name "iotfeds"
+              git config --global --add safe.directory '*'
+              git add .
+              git commit -m "Initialize config files"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp/configs
+            - mountPath: /configmap/files
+              name: all-configmap-volume
       containers:
-        - env:
-            - name: holder
-              value: ' '
-          image: symbioteh2020/symbiote-cloudconfig:3.0.4
+        - image: symbioteh2020/symbiote-cloudconfig:3.0.4
           name: symbiote-cloudconfig
+          command:
+            - sh
+            - -c
+            - |
+              if [[ ! -e /home/CloudConfigProperties/.git ]]; then cp -a /tmp/configs/. /home/CloudConfigProperties; fi
+              java -Xms128m -Xmx256m -XX:+UseContainerSupport -Duser.home=/home -jar $(ls *.jar)
           ports:
             - containerPort: 8888
           resources:
             limits:
-              memory: "1024M"
+              memory: "750M"
+              cpu: "500m"
             requests:
               memory: "500M"
+              cpu: "300m"
           volumeMounts:
+            - name: tmp
+              mountPath: /tmp/configs
             - mountPath: /home/CloudConfigProperties
               name: symbiote-vol-config
       restartPolicy: Always
       volumes:
+        - name: tmp
+          emptyDir: {}
         - name: symbiote-vol-config
           persistentVolumeClaim:
             claimName: symbiote-vol-config
+        - name: all-configmap-volume
+          configMap:
+            name: all-config-maps

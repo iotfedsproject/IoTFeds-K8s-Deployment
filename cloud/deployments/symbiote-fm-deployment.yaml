@@ -27,10 +27,10 @@ spec:
           resources:
             limits:
               memory: "750Mi"
-              cpu: "1"
+              cpu: "500m"
             requests:
               memory: "500Mi"
-              cpu: "500m"
+              cpu: "300m"
           volumeMounts:
             - mountPath: /home/bootstrap.properties
               name: federationmanager-bootstrap-configmap-volume

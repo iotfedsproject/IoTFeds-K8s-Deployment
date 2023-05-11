@@ -1,0 +1,66 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-coreconfig
+  name: {{ .Release.Name }}-symbiote-coreconfig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-coreconfig
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-coreconfig
+    spec:
+      initContainers:
+        - name: init-myservice
+          image: alpine/git:2.36.3
+          command:
+          - sh
+          - -c
+          - |
+            cp /configmap/files/*  /tmp/configs/
+            cd /tmp/configs/
+            git init .
+            git config user.email "admin@iotfeds.eu"
+            git config user.name "iotfeds"
+            git config --global --add safe.directory '*'
+            git add .
+            git commit -m "Initialize config files" 
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp/configs
+            - mountPath: /configmap/files
+              name: all-configmap-volume
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: symbiote-coreconfig
+          command:
+          - sh
+          - -c
+          - |
+            if [[ ! -e /home/CoreConfigProperties/.git ]]; then cp -a /tmp/configs/. /home/CoreConfigProperties; fi
+            java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8080 -Duser.home=/home -jar $(ls *.jar)
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp/configs
+            - mountPath: /home/CoreConfigProperties
+              name: symbiote-vol-config
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: symbiote-vol-config
+          persistentVolumeClaim:
+            claimName: symbiote-vol-config
+        - name: all-configmap-volume
+          configMap:
+            name: all-config-maps
+{{- end }}

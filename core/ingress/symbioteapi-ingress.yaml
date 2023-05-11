@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: symbioteapi-ingress
+  namespace: symbiote-core
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - symbiote-core.iotfeds.intracom-telecom.com
+      secretName: wildcard-ingress-tls
+  rules:
+    - host: symbiote-core.iotfeds.intracom-telecom.com
+      http:
+        paths:
+          - path: /symbioteapi
+            pathType: Prefix
+            backend:
+              service:
+                name: symbiote-api
+                port:
+                  number: 8080

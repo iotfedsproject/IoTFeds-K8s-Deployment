@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-crm
+  name: symbiote-crm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-crm
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-crm
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-crm:3.0.2
+          name: symbiote-crm
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-coreinterface:8100 -Duser.home=/home -jar $(ls *.jar)"]
+          resources:
+            limits:
+              memory: "500Mi"
+              cpu: "400m"
+            requests:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap

@@ -1,0 +1,16 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-bt
+  name: symbiote-bt
+spec:
+  ports:
+    - name: bt
+      port: 8205
+      targetPort: 8205
+  selector:
+    icom.symbiote.service: symbiote-bt
+  type: ClusterIP
+{{- end }}

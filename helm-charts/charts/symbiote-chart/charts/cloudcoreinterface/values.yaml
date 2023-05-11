@@ -1,0 +1,29 @@
+server:
+  enabled: true
+
+image:
+  repository: symbioteh2020/symbiote-cloudcoreinterface
+  tag: "3.0.3"
+  pullPolicy: IfNotPresent
+
+# resources: {}
+resources:
+  limits:
+    memory: "750Mi"
+    cpu: "1"
+  requests:
+    memory: "500Mi"
+    cpu: "500m"
+
+
+ingress:
+  enabled: true
+
+  ingressClassName: nginx
+
+  host: core-test.iotfeds.intracom-telecom.com
+
+  path: /cloudCoreInterface
+
+  tls: 
+    secretName: wildcard-ingress-tls

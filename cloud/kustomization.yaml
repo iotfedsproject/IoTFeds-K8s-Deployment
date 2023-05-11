@@ -1,0 +1,68 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: test-chart
+bases:
+  - ./pvc
+  - ./deployments
+  - ./services
+  - ./ingress
+# resources:
+
+configMapGenerator:
+- name: authenticationauthorizationmanager-bootstrap-configmap
+  files:
+  - config/AuthenticationAuthorizationManager/bootstrap.properties
+- name: authenticationauthorizationmanager-cert-configmap
+  files:
+  - config/AuthenticationAuthorizationManager/cert.properties
+- name: barteringandtrading-bootstrap-configmap
+  files:
+  - config/BarteringAndTrading/bootstrap.properties
+- name: federationmanager-bootstrap-configmap
+  files:
+  - config/FederationManager/bootstrap.properties
+- name: monitoring-bootstrap-configmap
+  files:
+  - config/Monitoring/bootstrap.properties
+- name: platformregistry-bootstrap-configmap
+  files:
+  - config/PlatformRegistry/bootstrap.properties
+- name: rappluginstarter-application-configmap
+  files:
+  - config/RAPPluginStarter/application.properties
+- name: registrationhandler-bootstrap-configmap
+  files:
+  - config/RegistrationHandler/bootstrap.properties
+- name: resourceaccessproxy-bootstrap-configmap
+  files:
+  - config/ResourceAccessProxy/bootstrap.properties
+- name: subscriptionmanager-bootstrap-configmap
+  files:
+  - config/SubscriptionManager/bootstrap.properties
+- name: trustmanager-bootstrap-configmap
+  files:
+  - config/TrustManager/bootstrap.properties
+
+- name: all-config-maps
+  files: 
+  - config/CloudConfigProperties/application-cloud.properties
+  - config/CloudConfigProperties/application.properties
+  - config/CloudConfigProperties/auth-service.properties
+  - config/CloudConfigProperties/AuthenticationAuthorizationManager.properties
+  - config/CloudConfigProperties/BarteringAndTrading.properties
+  - config/CloudConfigProperties/EurekaService.properties
+  - config/CloudConfigProperties/FederationManager.properties
+  - config/CloudConfigProperties/InterworkingInterface.properties
+  - config/CloudConfigProperties/Monitoring.properties
+  - config/CloudConfigProperties/PlatformRegistry.properties
+  - config/CloudConfigProperties/RegistrationHandler.properties
+  - config/CloudConfigProperties/ResourceAccessProxy.properties
+  - config/CloudConfigProperties/SubscriptionManager.properties
+  - config/CloudConfigProperties/TrustManager.properties
+  - config/CloudConfigProperties/ZipkinService.properties
+
+
+patches:
+- path: ingress-patch.json
+  target:
+    kind: Ingress

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-eureka
+  name: symbiote-eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-eureka
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-eureka
+    spec:
+      containers:
+        - image: symbioteh2020/symbiote-eureka:3.0.2
+          name: symbiote-eureka
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -XX:+UseContainerSupport -jar $(ls *.jar)"]
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "400m"
+            requests:
+              memory: "200Mi"
+              cpu: "200m"
+          ports:
+            - containerPort: 8761
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: bootstrap-properties-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: bootstrap-properties-configmap-volume
+          configMap:
+              name: bootstrap-properties-configmap

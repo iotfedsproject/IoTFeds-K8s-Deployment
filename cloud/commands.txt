@@ -1,0 +1,38 @@
+rm -f ./$CURR_CONFIG/nginx*
+
+CURR_CONFIG=configure
+CONFIGMAP_FILES=configmap
+
+
+if [ ! -d ./$CONFIGMAP_FILES ]; then
+  mkdir ./$CONFIGMAP_FILES;
+fi
+
+create_cm(){
+    local folder=$1
+    local file=$2
+
+    kubectl create configmap ${folder,,}-$(echo $file | cut -d "." -f 1)-configmap --from-file=./$CURR_CONFIG/$folder/$file -o yaml --dry-run=client > ./$CONFIGMAP_FILES/${folder,,}-$(echo $file | cut -d "." -f 1).yml ;
+
+}
+
+for FOLDERS in $(ls $CURR_CONFIG); do 
+    if [[ $FOLDERS == 'CloudConfigProperties' ]]; then
+        continue
+    fi
+    for FILES in $(ls $CURR_CONFIG/$FOLDERS) ; do 
+        create_cm $FOLDERS $FILES ;
+    done ; 
+done
+
+results=""
+for FILES in $(ls $CURR_CONFIG/CloudConfigProperties/*.properties ); do
+    # echo $FILES
+    results+=" --from-file=$FILES"
+done
+
+echo $results | xargs kubectl create configmap all-config-maps -o yaml --dry-run=client > ./$CONFIGMAP_FILES/all-config-maps.yml ;
+
+find ./$CONFIGMAP_FILES -type f -exec sed -i '/creationTimestamp/d' {} \;
+
+find ./$CONFIGMAP_FILES -type f -exec sed -i '${/^$/d;}' {} \;

@@ -1,0 +1,42 @@
+apiVersion: v1
+entries:
+  symbiote-chart:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-02-10T13:07:01.0945521+02:00"
+    dependencies:
+    - name: aam
+      repository: ""
+      version: 0.1.0
+    - name: administration
+      repository: ""
+      version: 0.1.0
+    - name: bt
+      repository: ""
+      version: 0.1.0
+    - name: coreconfig
+      repository: ""
+      version: 0.1.0
+    - name: coreinterface
+      repository: ""
+      version: 0.1.0
+    - name: mongo
+      repository: ""
+      version: 0.1.0
+    - name: rabbitmq
+      repository: ""
+      version: 0.1.0
+    - name: symbiote-api
+      repository: ""
+      version: 0.1.0
+    description: A Helm chart to install on Kubernetes Symbiote-core and symbiote-cloud.
+    digest: 34f696801c2ba079d3458f7bf8d49629631f26378e2b792177eb155eae65ec5d
+    maintainers:
+    - email: anasiou@intracom-telecom.com
+      name: anasiou
+    name: symbiote-chart
+    type: application
+    urls:
+    - https://iotfedsproject.github.io/helm-charts/symbiote-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-02-10T13:07:01.0772942+02:00"

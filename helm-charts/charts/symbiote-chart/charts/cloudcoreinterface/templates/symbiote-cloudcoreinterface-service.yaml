@@ -1,0 +1,15 @@
+{{- if .Values.server.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-cloudcoreinterface
+  name: symbiote-cloudcoreinterface
+spec:
+  ports:
+    - name: cloudcoreinterface
+      port: 8101
+      targetPort: 8101
+  selector:
+    icom.symbiote.service: symbiote-cloudcoreinterface
+{{- end }}

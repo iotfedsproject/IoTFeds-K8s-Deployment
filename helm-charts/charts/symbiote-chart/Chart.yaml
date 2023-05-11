@@ -1,0 +1,28 @@
+apiVersion: v2
+name: symbiote-chart
+description: A Helm chart to install on Kubernetes Symbiote-core and symbiote-cloud.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+- email: anasiou@intracom-telecom.com
+  name: anasiou
+dependencies:
+  - name: aam
+    version: "0.1.0"
+  - name: administration
+    version: "0.1.0"
+  - name: bt
+    version: "0.1.0"
+  - name: coreconfig
+    version: "0.1.0"
+  - name: coreinterface
+    version: "0.1.0"
+  - name: mongo
+    version: "0.1.0"
+  - name: rabbitmq
+    version: "0.1.0"
+  - name: symbiote-api
+    version: "0.1.0"
+  - name: cloudcoreinterface
+    version: "0.1.0"

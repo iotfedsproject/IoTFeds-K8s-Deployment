@@ -1,0 +1,17 @@
+server:
+  enabled: true
+
+image:
+  repository: symbioteh2020/symbiote-crm
+  tag: "3.0.2"
+  pullPolicy: IfNotPresent
+
+
+# resources: {}
+resources:
+  limits:
+    memory: "750Mi"
+    cpu: "1"
+  requests:
+    memory: "500Mi"
+    cpu: "500m"

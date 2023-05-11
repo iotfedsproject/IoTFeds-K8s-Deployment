@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+ - symbiote-aam-service.yaml
+ - symbiote-btm-service.yaml
+ - symbiote-cloudconfig-service.yaml     
+ - symbiote-fm-service.yaml
+ - symbiote-mongo-service.yaml
+ - symbiote-pr-service.yaml
+ - symbiote-rabbitmq-service.yaml        
+ - symbiote-rap-service.yaml
+ - symbiote-rh-service.yaml
+ - symbiote-sm-service.yaml

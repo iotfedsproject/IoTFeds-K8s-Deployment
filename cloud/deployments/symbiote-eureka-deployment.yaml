@@ -21,8 +21,10 @@ spec:
           resources:
             limits:
               memory: "1024M"
+              cpu: "500m"
             requests:
               memory: "500M"
+              cpu: "300m"
           volumeMounts:
             - mountPath: /home/bootstrap.properties
               name: eureka-bootstrap-configmap-volume

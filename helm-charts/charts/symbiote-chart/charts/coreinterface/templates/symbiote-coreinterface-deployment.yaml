@@ -1,0 +1,36 @@
+{{- if .Values.server.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    icom.symbiote.service: symbiote-coreinterface
+  name: {{ .Release.Name }}-symbiote-coreinterface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      icom.symbiote.service: symbiote-coreinterface
+  template:
+    metadata:
+      labels:
+        icom.symbiote.service: symbiote-coreinterface
+    spec:
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: symbiote-coreinterface
+          command: ["/bin/sh","-c"]
+          args: ["java -Xms128m -Xmx256m -XX:+UseContainerSupport  -DSPRING_BOOT_WAIT_FOR_SERVICES=symbiote-aam:8443 -Duser.home=/home -Dspring.output.ansi.enabled=NEVER -jar $(ls *.jar)"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          ports:
+            - containerPort: 8100
+          volumeMounts:
+            - mountPath: /home/bootstrap.properties
+              name: coreinterface-configmap-volume
+              subPath: bootstrap.properties
+      volumes:
+        - name: coreinterface-configmap-volume
+          configMap:
+              name: coreinterface-configmap
+{{- end }}
